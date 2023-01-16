@@ -82,11 +82,11 @@ Whether a given room is an “invite-only” room is determined by the room conf
 
 #### Membership
 
-1. `invite`: the user has been invited to participate in the room, but is not yet participating.
-2. `joined`: the user can send and receive events in the room.
-3. `knocking`: the user has requested to participate in the room, but has not yet been allowed to.
-4. `banned`: the user is not allowed to join the room.
-5. `leave`: the user cannot send or receive events in the room.
+1. `invite`: The user has been invited to participate in the room, but is not yet participating.
+2. `joined`: The user can send and receive events in the room.
+3. `knocking`: The user has requested to participate in the room, but has not yet been allowed to.
+4. `banned`: The user is not allowed to join the room.
+5. `leave`: The user cannot send or receive events in the room.
 
 #### MsgType
 
@@ -108,11 +108,11 @@ The application's data transmission package:
 
 ```json
 {
-  room_id: 'string',
-  event_id: 'string',
-  event_type: 'string',
-  content: { },
-  sender: 'string',
+  "roomId": "string",
+  "eventId": "string",
+  "eventType": "string",
+  "content": { },
+  "sender": "string",
 }
 ```
 
