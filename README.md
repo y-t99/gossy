@@ -108,11 +108,11 @@ The application's data transmission package:
 
 ```json
 {
-  room_id: string,
-  event_id: string,
-  event_type: string,
-  content: object,
-  sender: string,
+  room_id: 'string',
+  event_id: 'string',
+  event_type: 'string',
+  content: { },
+  sender: 'string',
 }
 ```
 
