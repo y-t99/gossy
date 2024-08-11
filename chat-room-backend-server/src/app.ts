@@ -1,6 +1,6 @@
 import Koa from 'koa';
-import {getLogger} from "./helpers";
-import {errorHandler} from "./middlewares";
+import { getLogger } from './helpers';
+import { errorHandler } from './middlewares';
 
 const app = new Koa();
 

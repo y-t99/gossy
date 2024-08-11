@@ -77,5 +77,5 @@ export enum ErrcodeEnum {
   /** The request cannot be completed because the homeserver has reached a resource limit imposed on it. For example, a homeserver held in a shared hosting environment may reach a resource limit if it starts using too much memory or disk space. The error MUST have an admin_contact field to provide the user receiving the error a place to reach out to. Typically, this error will appear on routes which attempt to modify state (e.g.: sending messages, account data, etc) and not routes which only read state (e.g.: /sync, get account data, etc).*/
   M_RESOURCE_LIMIT_EXCEEDED = 'M_RESOURCE_LIMIT_EXCEEDED',
   /** The user is unable to reject an invite to join the server notices room. See the Server Notices module for more information.*/
-  M_CANNOT_LEAVE_SERVER_NOTICE_ROOM = 'M_CANNOT_LEAVE_SERVER_NOTICE_ROOM'
+  M_CANNOT_LEAVE_SERVER_NOTICE_ROOM = 'M_CANNOT_LEAVE_SERVER_NOTICE_ROOM',
 }

@@ -1,7 +1,7 @@
 import Koa from 'koa';
-import {StandardErrorResponseSchema} from "../domains";
-import {ErrcodeEnum} from "../enums";
-import {getErrorMessage, getLogger} from "../helpers";
+import { StandardErrorResponseSchema } from '../domains';
+import { ErrcodeEnum } from '../enums';
+import { getErrorMessage, getLogger } from '../helpers';
 
 /**
  * Similarly, all endpoints require the server to return a JSON object, with the exception of 200 responses to the media download endpoints in the Content Repository module.
@@ -25,8 +25,8 @@ export const errorHandler = async (ctx: Koa.Context, next: Koa.Next) => {
     if (!parseResult.success) {
       ctx.body = {
         errcode: ErrcodeEnum.M_UNKNOWN,
-        error: getErrorMessage(err)
-      }
+        error: getErrorMessage(err),
+      };
     }
     logger.error(err);
   }

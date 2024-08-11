@@ -5,11 +5,18 @@
   "author": "itou ng",
   "license": "MIT",
   "scripts": {
+    "lint": "eslint \"src/**/*.ts\" --fix",
     "start": "tsc && node dist/app.js"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",
     "@types/koa": "^2.15.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.1",
+    "@typescript-eslint/parser": "^8.0.1",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "prettier": "^3.3.3",
     "typescript": "^5.5.4"
   },
   "dependencies": {

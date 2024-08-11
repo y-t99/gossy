@@ -1,1 +1,1 @@
-export * from './errcode.enum'
+export * from './errcode.enum';
