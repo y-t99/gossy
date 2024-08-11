@@ -112,13 +112,6 @@ The application's data transmission package:
   "eventId": "string",
   "eventType": "string",
   "content": { },
-  "sender": "string",
+  "sender": "string"
 }
 ```
-
-## Relative
-
-### Instant messaging protocol
-
-1. [XMPP vs Matrix vs MQTT: which instant messaging protocol is best for your chat application?](https://www.rst.software/blog/xmpp-vs-matrix-vs-mqtt-which-instant-messaging-protocol-is-best-for-your-chat-application)
-2. [Matrix Specification](https://spec.matrix.org)
