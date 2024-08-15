@@ -3,6 +3,7 @@ import { getLogger } from './helpers';
 import { errorHandler } from './middlewares';
 import Router from '@koa/router';
 import koaBody from 'koa-body';
+import { authApis } from './apis';
 
 const app = new Koa();
 
@@ -19,6 +20,11 @@ app.use(
 );
 
 export const routers: Router = new Router();
+
+for (const router of [authApis]) {
+  routers.use(router.routes());
+  routers.use(router.allowedMethods());
+}
 
 app.use(routers.routes()).use(routers.allowedMethods());
 

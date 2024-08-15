@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  email         String?   @unique @db.VarChar(255)
+  emailVerified Boolean   @default(false) @map("email_verified")
+  phoneNumber   String?   @unique @map("phone_number") @db.VarChar(255)
+  phoneVerified Boolean   @default(false) @map("phone_verified")
+  name          String?   @db.VarChar(255)
+  password      String?   @db.VarChar(255)
+  salt          String?   @db.Char(255)
+  image         String?   @db.VarChar(255)
+  state         Int       @default(0)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  accounts      Account[]
+  sessions      Session?
+
+  @@map("users")
+}
+
+model Account {
+  userId            String  @map("user_Id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refreshToken      String? @map("refresh_token")
+  accessToken       String? @map("access_token")
+  expiresAt         Int?    @map("expires_at")
+  tokenType         String? @map("token_type")
+  scope             String?
+  idToken           String? @map("id_token")
+  sessionState      String? @map("session_state")
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+  @@index([userId], map: "accounts_user_id_fkey")
+  @@map("accounts")
+}
+
+model Session {
+  userId       String   @unique @map("user_Id")
+  expires      DateTime
+  sessionToken String   @map("session_token") @db.VarChar(2048)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "sessions_user_id_fkey")
+  @@map("sessions")
+}
