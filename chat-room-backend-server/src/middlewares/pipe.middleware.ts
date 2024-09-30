@@ -3,6 +3,7 @@ import { PipeSchema } from '../types';
 import { ZodError } from 'zod';
 import { ErrcodeEnum } from '../enums';
 import { getZodErrorMessage } from '../helpers';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 
 export const pipeMiddleware = (schema: PipeSchema): Koa.Middleware => {
   return async (ctx: Koa.Context, next: Koa.Next) => {
@@ -21,11 +22,13 @@ export const pipeMiddleware = (schema: PipeSchema): Koa.Middleware => {
       }
     } catch (e: unknown) {
       if (e instanceof ZodError) {
-        ctx.status = 400;
+        ctx.status = StatusCodes.BAD_REQUEST;
+        ctx.message = ReasonPhrases.BAD_REQUEST;
         ctx.body = {
           errcode: ErrcodeEnum.M_INVALID_PARAM,
           error: getZodErrorMessage(e),
         };
+        return;
       }
       throw e;
     }
