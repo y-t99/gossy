@@ -11,6 +11,6 @@ authApis.post(
   async (ctx) => {
     const { email, password } = ctx.request.body;
     const jwt = await signinByEmailAndPassword(email, password);
-    ctx.cookies.set('squirrel-auth.session-token', jwt, { httpOnly: true });
+    ctx.cookies.set('gossy-auth.session-token', jwt, { httpOnly: true });
   },
 );
