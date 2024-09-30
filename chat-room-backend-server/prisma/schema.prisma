@@ -32,7 +32,7 @@ model Account {
   id                Int          @id @default(autoincrement())
   uuid              String       @default(cuid())
   userId            Int          @map("user_Id")
-  type              String       @db.VarChar(64)
+  type              AccountType
   provider          ProviderType
   providerAccountId String       @map("provider_account_id") @db.VarChar(255)
   refreshToken      String?      @map("refresh_token")
@@ -65,5 +65,10 @@ model Session {
 }
 
 enum ProviderType {
+  credentials
+}
+
+enum AccountType {
+  oauth
   credentials
 }

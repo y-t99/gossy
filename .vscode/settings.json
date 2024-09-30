@@ -4,6 +4,7 @@
     "errcode",
     "gossy",
     "signin",
-    "stringifying"
+    "stringifying",
+    "uuidv"
   ]
 }
