@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -48,7 +48,7 @@ model Account {
 model Session {
   userId       String   @unique @map("user_Id")
   expires      DateTime
-  sessionToken String   @map("session_token") @db.VarChar(2048)
+  sessionToken String   @map("session_token") @db.Text()
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId], map: "sessions_user_id_fkey")
