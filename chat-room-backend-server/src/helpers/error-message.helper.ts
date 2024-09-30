@@ -1,3 +1,5 @@
+import { ZodError } from 'zod';
+
 type ErrorWithMessage = {
   message: string;
 };
@@ -25,4 +27,8 @@ function toErrorWithMessage(maybeError: unknown): ErrorWithMessage {
 
 export function getErrorMessage(error: unknown) {
   return toErrorWithMessage(error).message;
+}
+
+export function getZodErrorMessage(error: ZodError) {
+  return error.issues.map((e) => `${e.path}::${e.message}`).join('; ');
 }

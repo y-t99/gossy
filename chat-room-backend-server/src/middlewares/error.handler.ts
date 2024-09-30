@@ -20,7 +20,6 @@ export const errorHandler = async (ctx: Koa.Context, next: Koa.Next) => {
   try {
     await next();
   } catch (err: unknown) {
-    // ctx.status = err.statusCode || err.status || 500;
     const parseResult = StandardErrorResponseSchema.safeParse(ctx.body);
     if (!parseResult.success) {
       ctx.body = {

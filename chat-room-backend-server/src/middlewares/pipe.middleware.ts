@@ -1,5 +1,8 @@
 import * as Koa from 'koa';
 import { PipeSchema } from '../types';
+import { ZodError } from 'zod';
+import { ErrcodeEnum } from '../enums';
+import { getZodErrorMessage } from '../helpers';
 
 export const pipeMiddleware = (schema: PipeSchema): Koa.Middleware => {
   return async (ctx: Koa.Context, next: Koa.Next) => {
@@ -16,8 +19,14 @@ export const pipeMiddleware = (schema: PipeSchema): Koa.Middleware => {
         const bodyObject = ctx.request.body;
         await schema.body.parse(bodyObject);
       }
-    } catch (e: any) {
-      e.statusCode = 400;
+    } catch (e: unknown) {
+      if (e instanceof ZodError) {
+        ctx.status = 400;
+        ctx.body = {
+          errcode: ErrcodeEnum.M_INVALID_PARAM,
+          error: getZodErrorMessage(e),
+        };
+      }
       throw e;
     }
     await next();
