@@ -22,6 +22,7 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
+    "@casl/ability": "^6.7.2",
     "@koa/router": "^12.0.1",
     "@prisma/client": "^5.18.0",
     "@types/node": "^22.2.0",
