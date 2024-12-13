@@ -1,8 +1,15 @@
 {
   "cSpell.words": [
+    "authorisation",
+    "authorised",
     "auths",
+    "autoincrement",
+    "cuid",
+    "datasource",
     "errcode",
+    "fkey",
     "gossy",
+    "mxid",
     "signin",
     "stringifying",
     "uuidv"
