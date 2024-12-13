@@ -9,6 +9,7 @@
     "errcode",
     "fkey",
     "gossy",
+    "localpart",
     "msgtype",
     "mxid",
     "signin",
