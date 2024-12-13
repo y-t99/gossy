@@ -3,7 +3,7 @@ import { encryptedFileSchema } from './encrypted-file.type';
 import { fileInfoSchema } from './file-info.type';
 import { imageInfoSchema } from './image-info.type';
 import { locationInfoSchema } from './location-info.type';
-import { RoomMessageType } from './room-message-type.enum';
+import { RoomMessageType } from '../enums';
 import z from 'zod';
 import { videoInfoSchema } from './video-info.type';
 
