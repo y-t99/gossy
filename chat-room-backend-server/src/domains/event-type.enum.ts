@@ -1,6 +1,7 @@
 import z from 'zod';
 import { RoomJoinRules } from './room-join-rules.enum';
 import { RoomMembershipStates } from './room-membership-states.enum';
+import { thumbnailInfoSchema } from './thumbnail-info.type';
 
 /**
  * Room events are split into two categories:
@@ -59,6 +60,47 @@ export enum EventType {
    * @see https://spec.matrix.org/v1.12/client-server-api/#mroompower_levels
    */
   ROOM_POWER_LEVELS = 'm.room.power_levels',
+
+  /**
+   * Event type: State event
+   * State key: The zero-length string
+   *
+   * @see https://spec.matrix.org/v1.12/client-server-api/#mroomname
+   */
+  ROOM_NAME = 'm.room.name',
+
+  /**
+   * Event type: State event
+   * State key: The zero-length string
+   *
+   * @see https://spec.matrix.org/v1.12/client-server-api/#mroomtopic
+   */
+  ROOM_TOPIC = 'm.room.topic',
+
+  /**
+   * Event type: State event
+   * State key: The zero-length string
+   *
+   * @see https://spec.matrix.org/v1.12/client-server-api/#mroomavatar
+   */
+  ROOM_AVATAR = 'm.room.avatar',
+
+  /**
+   * Event type: State event
+   * State key: The zero-length string
+   *
+   * @see https://spec.matrix.org/v1.12/client-server-api/#mroompinned_events
+   */
+  ROOM_PINNED_EVENTS = 'm.room.pinned_events',
+
+  /**
+   * This event is used when sending messages in a room. Messages are not limited to be text. The msgtype key outlines the type of message, e.g. text, audio, image, video, etc. The body key is text and MUST be used with every kind of msgtype as a fallback mechanism for when a client cannot render a message. This allows clients to display something even if it is just plain text.
+   *
+   * Event type: Message event
+   *
+   * @see https://spec.matrix.org/v1.12/client-server-api/#mroommessage
+   */
+  ROOM_MESSAGE = 'm.room.message',
 }
 
 export const roomCanonicalAliasContentSchema = z.object({
@@ -167,4 +209,35 @@ export const roomPowerLevelsContentSchema = z.object({
   state_default: z.number().optional(),
   users: z.record(z.number()).optional(),
   users_default: z.number().optional(),
+});
+
+export const roomMessageContentSchema = z.object({
+  body: z.string(),
+  msgtype: z.string(),
+});
+
+export const roomNameContentSchema = z.object({
+  name: z.string(),
+});
+
+export const roomTopicContentSchema = z.object({
+  topic: z.string(),
+});
+
+export const roomAvatarContentSchema = z.object({
+  info: z
+    .object({
+      mimetype: z.string().optional(),
+      size: z.number().optional(),
+      h: z.number().optional(),
+      w: z.number().optional(),
+      thumbnail_info: thumbnailInfoSchema.optional(),
+      thumbnail_url: z.string().url().optional(),
+    })
+    .optional(),
+  url: z.string().url().optional(),
+});
+
+export const roomPinnedEventsContentSchema = z.object({
+  pinned: z.array(z.string()),
 });
