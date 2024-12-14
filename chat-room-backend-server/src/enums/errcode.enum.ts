@@ -82,7 +82,7 @@ export enum ErrcodeEnum {
 }
 
 export enum ErrorMessageEnum {
-  M_FORBIDDEN = 'Forbidden access, e.g. joining a room without permission, failed login.',
+  M_FORBIDDEN = 'Forbidden access.',
   M_UNKNOWN_TOKEN = 'The access or refresh token specified was not recognised.',
   M_MISSING_TOKEN = 'No access token was specified for the request.',
   M_USER_LOCKED = 'The account has been locked and cannot be used at this time.',
@@ -94,8 +94,8 @@ export enum ErrorMessageEnum {
   M_UNKNOWN = 'An unknown error has occurred.',
   M_UNAUTHORIZED = 'The request was not correctly authorized. Usually due to login failures.',
   M_USER_DEACTIVATED = 'The user ID associated with the request has been deactivated. Typically for endpoints that prove authentication, such as /login.',
-  M_USER_IN_USE = 'Encountered when trying to register a user ID which has been taken.',
-  M_INVALID_USERNAME = 'Encountered when trying to register a user ID which is not valid.',
+  M_USER_IN_USE = 'The desired user ID is already taken.',
+  M_INVALID_USERNAME = 'The desired user ID is not a valid user name.',
   M_ROOM_IN_USE = 'Sent when the room alias given to the createRoom API is already in use.',
   M_INVALID_ROOM_STATE = 'Sent when the initial state given to the createRoom API is invalid.',
   M_THREEPID_IN_USE = 'Sent when a threepid given to an API cannot be used because the same threepid is already in use.',

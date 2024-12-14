@@ -52,3 +52,11 @@ export const authResponseSchema = authRequirementSchema.extend({
 
 export type AuthRequirement = z.infer<typeof authRequirementSchema>;
 export type AuthResponse = z.infer<typeof authResponseSchema>;
+
+export const loginFlowSchema = z.object({
+  type: z.nativeEnum(AuthenticationType),
+  get_login_token: z.boolean().optional(),
+  user: z.boolean().optional(),
+});
+
+export type LoginFlow = z.infer<typeof loginFlowSchema>;

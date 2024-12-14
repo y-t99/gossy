@@ -8,4 +8,5 @@ export enum Identifier {
   ROOM_ALIAS = 'm.id.room_alias',
   THIRDPARTY = 'm.id.thirdparty',
   PHONE = 'm.id.phone',
+  DEVICE = 'm.id.device',
 }

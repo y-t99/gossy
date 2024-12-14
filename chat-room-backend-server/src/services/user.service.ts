@@ -11,6 +11,7 @@ import { StatusCodes } from 'http-status-codes';
 import { ErrcodeEnum } from '../enums';
 import util from 'node:util';
 import { v4 as uuidv4 } from 'uuid';
+import { AuthenticationType, LoginFlow } from '../domains';
 
 export async function signinByEmailAndPassword(
   email: string,
@@ -63,7 +64,7 @@ export async function signupByEmailAndPassword(
         password: encryptedPassword,
         salt,
         state: 1,
-        emailVerified: true,
+        emailVerified: null,
       },
     });
     await tx.account.create({
@@ -97,4 +98,17 @@ async function generateSessionToken(userId: number) {
     },
   });
   return jwt;
+}
+
+export function getSupportedLoginTypes(): LoginFlow[] {
+  return [
+    {
+      type: AuthenticationType.PASSWORD,
+      user: true,
+    },
+    {
+      type: AuthenticationType.TOKEN,
+      get_login_token: true,
+    },
+  ];
 }

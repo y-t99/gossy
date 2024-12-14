@@ -9,13 +9,33 @@
 
 import Router from '@koa/router';
 import { pipeMiddleware } from '../middlewares';
-import { signinRoSchema, signupRoSchema } from './ros';
 import {
+  MatrixSigninRequestBodyRo,
+  matrixSigninRequestBodyRoSchema,
+  MatrixSignupRequestBodyRo,
+  matrixSignupRequestBodyRoSchema,
+  MatrixSignupRequestParamsRo,
+  matrixSignupRequestParamsRoSchema,
+  signinRoSchema,
+  SignupKind,
+  signupRoSchema,
+} from './ros';
+import {
+  getSupportedLoginTypes,
   signinByEmailAndPassword,
   signupByEmailAndPassword,
 } from '../services';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
-import { AuthenticationType } from 'src/domains';
+import { AuthenticationType } from '../domains';
+import { prisma } from '../dbs';
+import {
+  ErrcodeEnum,
+  ErrorMessageEnum,
+  HostKeyEnum,
+  Identifier,
+} from '../enums';
+import { isValidId } from '../utils';
+import { HttpException } from '../exceptions';
 
 export const authApis = new Router();
 
@@ -40,6 +60,86 @@ authApis.get('/_matrix/client/v3/login', async (ctx) => {
     ],
   };
 });
+
+/**
+ * @see https://spec.matrix.org/v1.12/client-server-api/#post_matrixclientv3register
+ */
+authApis.get(
+  '/_matrix/client/v3/register',
+  pipeMiddleware({
+    query: matrixSignupRequestParamsRoSchema,
+    body: matrixSignupRequestBodyRoSchema,
+  }),
+  async (ctx) => {
+    const query = ctx.request.query as MatrixSignupRequestParamsRo;
+    const body = ctx.request.body as MatrixSignupRequestBodyRo;
+    if (query.kind === SignupKind.USER) {
+      if (
+        !body.username ||
+        isValidId(Identifier.USER, body.username, HostKeyEnum.GOSSY)
+      ) {
+        throw new HttpException(
+          StatusCodes.BAD_REQUEST,
+          ErrcodeEnum.M_INVALID_USERNAME,
+          ErrorMessageEnum.M_INVALID_USERNAME,
+        );
+      }
+      const user = await prisma.user.count({
+        where: {
+          name: body.username,
+        },
+      });
+      if (user) {
+        throw new HttpException(
+          StatusCodes.BAD_REQUEST,
+          ErrcodeEnum.M_USER_IN_USE,
+          ErrorMessageEnum.M_USER_IN_USE,
+        );
+      }
+    }
+  },
+);
+
+/**
+ * @see https://spec.matrix.org/v1.12/client-server-api/#get_matrixclientv3login
+ */
+authApis.get('/_matrix/client/v3/login', (ctx) => {
+  ctx.status = StatusCodes.OK;
+  ctx.message = ReasonPhrases.OK;
+  ctx.body = {
+    flows: getSupportedLoginTypes(),
+  };
+});
+
+/**
+ * @see https://spec.matrix.org/v1.12/client-server-api/#post_matrixclientv3login
+ */
+authApis.post(
+  '/_matrix/client/v3/login',
+  pipeMiddleware({ body: matrixSigninRequestBodyRoSchema }),
+  async (ctx) => {
+    const body = ctx.request.body as MatrixSigninRequestBodyRo;
+    if (body.type === AuthenticationType.PASSWORD) {
+      if (body.identifier.type === Identifier.USER) {
+        if (!body.password) {
+          throw new HttpException(
+            StatusCodes.FORBIDDEN,
+            ErrcodeEnum.M_FORBIDDEN,
+            ErrorMessageEnum.M_FORBIDDEN,
+          );
+        }
+        const jwt = await signinByEmailAndPassword(
+          body.identifier.user,
+          body.password,
+        );
+        ctx.status = StatusCodes.OK;
+        ctx.message = ReasonPhrases.OK;
+        ctx.cookies.set('gossy-auth.session-token', jwt, { httpOnly: true });
+        return;
+      }
+    }
+  },
+);
 
 authApis.post(
   '/auths/signin',

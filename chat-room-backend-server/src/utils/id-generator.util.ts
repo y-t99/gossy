@@ -17,6 +17,7 @@ const sigil = {
   [Identifier.ROOM]: '!',
   [Identifier.EVENT]: '$',
   [Identifier.ROOM_ALIAS]: '#',
+  [Identifier.DEVICE]: '',
 };
 
 const maxIdByteLength = 255;
@@ -44,8 +45,14 @@ export function isValidId(
   return true;
 }
 
-export function generateId(type: Identifier.ROOM | Identifier.EVENT) {
-  if (type !== Identifier.ROOM && type !== Identifier.EVENT) {
+export function generateId(
+  type: Identifier.ROOM | Identifier.EVENT | Identifier.DEVICE,
+) {
+  if (
+    type !== Identifier.ROOM &&
+    type !== Identifier.EVENT &&
+    type !== Identifier.DEVICE
+  ) {
     throw new Error('Invalid identifier type');
   }
 
