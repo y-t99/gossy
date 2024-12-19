@@ -10,7 +10,7 @@
  *
  * @see https://spec.matrix.org/v1.12/client-server-api/#types-of-room-events
  */
-export enum EventType {
+export enum RoomEventType {
   /**
    * This event is used to inform the room about which alias should be considered the canonical one, and which other aliases point to the room.
    * This could be for display purposes or as suggestion to users which alias to use to advertise and access the room.

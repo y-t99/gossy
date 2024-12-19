@@ -1,20 +1,26 @@
+import { RoomEventType } from 'src/enums/event-type.enum';
 import z from 'zod';
 
+/**
+ * @see https://spec.matrix.org/v1.12/client-server-api/#room-event-format
+ */
 export const roomEventSchema = z.object({
   content: z.record(z.unknown()),
   event_id: z.string(),
   origin_server_ts: z.number(),
   room_id: z.string(),
   sender: z.string(),
-  type: z.string(),
+  type: z.nativeEnum(RoomEventType),
   state_key: z.string().optional(),
-  unsigned: z.object({
-    age: z.number().optional(),
-    membership: z.string().optional(),
-    prev_content: z.record(z.unknown()).optional(),
-    redacted_because: z.string().optional().describe('RoomEvent'),
-    transaction_id: z.string().optional(),
-  }),
+  unsigned: z
+    .object({
+      age: z.number().optional(),
+      membership: z.string().optional(),
+      prev_content: z.record(z.unknown()).optional(),
+      redacted_because: z.string().optional().describe('RoomEvent'),
+      transaction_id: z.string().optional(),
+    })
+    .optional(),
 });
 
 export const roomStrippedEventSchema = roomEventSchema
