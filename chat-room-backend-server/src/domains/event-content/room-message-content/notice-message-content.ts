@@ -1,4 +1,4 @@
-import { RoomMessageType } from 'src/enums';
+import { RoomMessageType } from '../../../enums';
 import { z } from 'zod';
 
 export const noticeMessageContentSchema = z.object({

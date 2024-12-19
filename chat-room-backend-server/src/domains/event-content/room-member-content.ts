@@ -1,4 +1,4 @@
-import { RoomMembershipStates } from 'src/enums';
+import { RoomMembershipStates } from '../../enums';
 import { z } from 'zod';
 
 export const roomMemberContentSchema = z.object({

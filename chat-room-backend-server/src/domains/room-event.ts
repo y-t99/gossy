@@ -1,5 +1,5 @@
-import { RoomEventType } from 'src/enums/event-type.enum';
-import z from 'zod';
+import { RoomEventType } from '../enums/event-type.enum';
+import { z } from 'zod';
 
 /**
  * @see https://spec.matrix.org/v1.12/client-server-api/#room-event-format

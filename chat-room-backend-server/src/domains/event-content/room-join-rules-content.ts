@@ -1,4 +1,4 @@
-import { RoomJoinRules } from 'src/enums';
+import { RoomJoinRules } from '../../enums';
 import { z } from 'zod';
 
 export const roomJoinRulesContentSchema = z.object({
