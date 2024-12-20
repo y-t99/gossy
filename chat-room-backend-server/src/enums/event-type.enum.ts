@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 /**
  * Room events are split into two categories:
  *
@@ -10,7 +12,7 @@
  *
  * @see https://spec.matrix.org/v1.12/client-server-api/#types-of-room-events
  */
-export enum RoomEventType {
+const RoomEventTypeValues = [
   /**
    * This event is used to inform the room about which alias should be considered the canonical one, and which other aliases point to the room.
    * This could be for display purposes or as suggestion to users which alias to use to advertise and access the room.
@@ -20,7 +22,7 @@ export enum RoomEventType {
    *
    * @see https://spec.matrix.org/v1.12/client-server-api/#mroomcanonical_alias
    */
-  ROOM_CANONICAL_ALIAS = 'm.room.canonical_alias',
+  'm.room.canonical_alias',
 
   /**
    * This is the first event in a room and cannot be changed. It acts as the root of all other events.
@@ -30,7 +32,7 @@ export enum RoomEventType {
    *
    * @see https://spec.matrix.org/v1.12/client-server-api/#mroomcreate
    */
-  ROOM_CREATE = 'm.room.create',
+  'm.room.create',
 
   /**
    * Event type: State event
@@ -38,7 +40,7 @@ export enum RoomEventType {
    *
    * @see https://spec.matrix.org/v1.12/client-server-api/#mroomjoin_rules
    */
-  ROOM_JOIN_RULES = 'm.room.join_rules',
+  'm.room.join_rules',
 
   /**
    * Event type: State event
@@ -46,7 +48,7 @@ export enum RoomEventType {
    *
    * @see https://spec.matrix.org/v1.12/client-server-api/#mroommember
    */
-  ROOM_MEMBER = 'm.room.member',
+  'm.room.member',
 
   /**
    * Event type: State event
@@ -54,7 +56,7 @@ export enum RoomEventType {
    *
    * @see https://spec.matrix.org/v1.12/client-server-api/#mroompower_levels
    */
-  ROOM_POWER_LEVELS = 'm.room.power_levels',
+  'm.room.power_levels',
 
   /**
    * Event type: State event
@@ -62,7 +64,7 @@ export enum RoomEventType {
    *
    * @see https://spec.matrix.org/v1.12/client-server-api/#mroomname
    */
-  ROOM_NAME = 'm.room.name',
+  'm.room.name',
 
   /**
    * Event type: State event
@@ -70,7 +72,7 @@ export enum RoomEventType {
    *
    * @see https://spec.matrix.org/v1.12/client-server-api/#mroomtopic
    */
-  ROOM_TOPIC = 'm.room.topic',
+  'm.room.topic',
 
   /**
    * Event type: State event
@@ -78,7 +80,7 @@ export enum RoomEventType {
    *
    * @see https://spec.matrix.org/v1.12/client-server-api/#mroomavatar
    */
-  ROOM_AVATAR = 'm.room.avatar',
+  'm.room.avatar',
 
   /**
    * Event type: State event
@@ -86,7 +88,7 @@ export enum RoomEventType {
    *
    * @see https://spec.matrix.org/v1.12/client-server-api/#mroompinned_events
    */
-  ROOM_PINNED_EVENTS = 'm.room.pinned_events',
+  'm.room.pinned_events',
 
   /**
    * This event is used when sending messages in a room. Messages are not limited to be text. The msgtype key outlines the type of message, e.g. text, audio, image, video, etc. The body key is text and MUST be used with every kind of msgtype as a fallback mechanism for when a client cannot render a message. This allows clients to display something even if it is just plain text.
@@ -95,5 +97,7 @@ export enum RoomEventType {
    *
    * @see https://spec.matrix.org/v1.12/client-server-api/#mroommessage
    */
-  ROOM_MESSAGE = 'm.room.message',
-}
+  'm.room.message',
+] as const;
+
+export const RoomEventTypeEnum = z.enum(RoomEventTypeValues);
