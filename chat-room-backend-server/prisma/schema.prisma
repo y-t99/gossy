@@ -9,12 +9,12 @@ datasource db {
 
 model User {
   id            Int       @id @default(autoincrement())
-  uuid          String    @unique @default(cuid())
+  uuid          String    @unique @db.VarChar(255)
   email         String?   @unique @db.VarChar(255)
   emailVerified DateTime? @map("email_verified")
   phoneNumber   String?   @unique @map("phone_number") @db.VarChar(255)
   phoneVerified DateTime? @map("phone_verified")
-  name      String?   @unique @db.VarChar(255)
+  name          String?   @unique @db.VarChar(255)
   password      String?   @db.VarChar(255)
   salt          String?   @db.Char(255)
   image         String?   @db.VarChar(255)
@@ -35,12 +35,12 @@ model Account {
   type              AccountType
   provider          ProviderType
   providerAccountId String       @map("provider_account_id") @db.VarChar(255)
-  refreshToken      String?      @db.Text @map("refresh_token")
-  accessToken       String?      @db.Text @map("access_token")
+  refreshToken      String?      @map("refresh_token") @db.Text
+  accessToken       String?      @map("access_token") @db.Text
   expiresAt         Int?         @map("expires_at")
   tokenType         String?      @map("token_type")
   scope             String?
-  idToken           String?      @db.Text @map("id_token")
+  idToken           String?      @map("id_token") @db.Text
   sessionState      String?      @map("session_state")
   createdAt         DateTime     @default(now()) @map("created_at")
   updatedAt         DateTime     @updatedAt @map("updated_at")
@@ -68,9 +68,28 @@ model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Room {
+  id        Int            @id @default(autoincrement())
+  uuid      String         @unique @db.VarChar(255)
+  name      String?        @db.VarChar(255)
+  alias     String?        @map("alias") @db.VarChar(255)
+  version   Int?
+  type      String?        @db.VarChar(255)
+  avatar    String?        @db.VarChar(255)
+  joinRules RoomJoinRules?
+  topic     String?        @db.VarChar(255)
+  creator   String         @db.VarChar(255)
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+
+  @@index([uuid])
+  @@index([creator])
+  @@map("rooms")
 }
 
 enum ProviderType {
@@ -80,4 +99,13 @@ enum ProviderType {
 enum AccountType {
   oauth
   credentials
+}
+
+enum RoomJoinRules {
+  public
+  invite
+  knock
+  restricted
+  knock_restricted
+  private
 }

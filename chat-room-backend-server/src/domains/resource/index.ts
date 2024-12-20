@@ -5,3 +5,4 @@ export * from './image-info.type';
 export * from './location-info.type';
 export * from './thumbnail-info.type';
 export * from './video-info.type';
+export * from './avatar-info.type';
