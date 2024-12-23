@@ -8,3 +8,7 @@ export const locationMessageContentSchema = z.object({
   geo_uri: z.string().url(),
   info: locationInfoSchema.optional(),
 });
+
+export type LocationMessageContent = z.infer<
+  typeof locationMessageContentSchema
+>;

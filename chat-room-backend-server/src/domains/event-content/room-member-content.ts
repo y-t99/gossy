@@ -19,3 +19,5 @@ export const roomMemberContentSchema = z.object({
     })
     .optional(),
 });
+
+export type RoomMemberContent = z.infer<typeof roomMemberContentSchema>;

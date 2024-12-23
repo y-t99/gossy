@@ -14,7 +14,7 @@ export const createRoomRoSchema = z.object({
     })
     .partial()
     .optional(),
-  initial_state: stateEventSchema.optional(),
+  initial_state: z.array(stateEventSchema).optional(),
   invite: z.array(z.string()).optional(),
   invite_3pid: z.array(invite3pidSchema).optional(),
   id_direct: z.boolean().optional(),
@@ -28,3 +28,5 @@ export const createRoomRoSchema = z.object({
   topic: z.string().optional(),
   visibility: z.enum(['public', 'private']).optional(),
 });
+
+export type CreateRoomRo = z.infer<typeof createRoomRoSchema>;

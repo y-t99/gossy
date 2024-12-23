@@ -7,3 +7,5 @@ export const emoteMessageContentSchema = z.object({
   formatted_body: z.string().optional(),
   msgtype: z.literal(RoomMessageType.EMOTE),
 });
+
+export type EmoteMessageContent = z.infer<typeof emoteMessageContentSchema>;

@@ -8,3 +8,5 @@ export const textMessageContentSchema = z.object({
   formatted_body: z.string().optional(),
   msgtype: z.literal(RoomMessageType.TEXT),
 });
+
+export type TextMessageContent = z.infer<typeof textMessageContentSchema>;

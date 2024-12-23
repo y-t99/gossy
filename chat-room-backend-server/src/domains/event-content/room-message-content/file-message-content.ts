@@ -12,3 +12,5 @@ export const fileMessageContentSchema = z.object({
   info: fileInfoSchema.optional(),
   url: z.string().url().optional(),
 });
+
+export type FileMessageContent = z.infer<typeof fileMessageContentSchema>;

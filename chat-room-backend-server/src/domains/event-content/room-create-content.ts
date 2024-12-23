@@ -33,3 +33,5 @@ export const roomCreateContentSchema = z.object({
       'Whether users on other servers can join this room. Defaults to true if key does not exist.',
     ),
 });
+
+export type RoomCreateContent = z.infer<typeof roomCreateContentSchema>;

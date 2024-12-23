@@ -15,3 +15,5 @@ export const imageMessageContentSchema = z.object({
   info: imageInfoSchema,
   url: z.string().url().optional(),
 });
+
+export type ImageMessageContent = z.infer<typeof imageMessageContentSchema>;

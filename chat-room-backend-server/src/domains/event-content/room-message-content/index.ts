@@ -27,3 +27,5 @@ export const roomMessageContentSchema = z.union([
   noticeMessageContentSchema,
   emoteMessageContentSchema,
 ]);
+
+export type RoomMessageContent = z.infer<typeof roomMessageContentSchema>;

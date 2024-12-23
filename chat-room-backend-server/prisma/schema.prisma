@@ -92,20 +92,48 @@ model Room {
   @@map("rooms")
 }
 
+model Event {
+  id        Int       @id @default(autoincrement())
+  uuid      String    @unique @db.VarChar(255)
+  roomId    String    @map("room_id") @db.VarChar(255)
+  sender    String    @db.VarChar(255)
+  type      EventType
+  content   Json
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@map("events")
+}
+
 enum ProviderType {
-  credentials
+  CREDENTIALS @map("credentials")
 }
 
 enum AccountType {
-  oauth
-  credentials
+  OAUTH       @map("oauth")
+  CREDENTIALS @map("credentials")
 }
 
 enum RoomJoinRules {
-  public
-  invite
-  knock
-  restricted
-  knock_restricted
-  private
+  PUBLIC           @map("public")
+  INVITE           @map("invite")
+  KNOCK            @map("knock")
+  RESTRICTED       @map("restricted")
+  KNOCK_RESTRICTED @map("knock_restricted")
+  PRIVATE          @map("private")
+}
+
+enum EventType {
+  ROOM_CREATE             @map("m.room.create")
+  ROOM_JOIN_RULES         @map("m.room.join_rules")
+  ROOM_MEMBER             @map("m.room.member")
+  ROOM_POWER_LEVELS       @map("m.room.power_levels")
+  ROOM_NAME               @map("m.room.name")
+  ROOM_TOPIC              @map("m.room.topic")
+  ROOM_AVATAR             @map("m.room.avatar")
+  ROOM_PINNED_EVENTS      @map("m.room.pinned_events")
+  ROOM_MESSAGE            @map("m.room.message")
+  ROOM_HISTORY_VISIBILITY @map("m.room.history_visibility")
+  ROOM_GUEST_ACCESS       @map("m.room.guest_access")
+  ROOM_THIRD_PARTY_INVITE @map("m.room.third_party_invite")
 }

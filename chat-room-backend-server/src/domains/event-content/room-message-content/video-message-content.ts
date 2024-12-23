@@ -15,3 +15,5 @@ export const videoMessageContentSchema = z.object({
   info: videoInfoSchema.optional(),
   url: z.string().url().optional(),
 });
+
+export type VideoMessageContent = z.infer<typeof videoMessageContentSchema>;

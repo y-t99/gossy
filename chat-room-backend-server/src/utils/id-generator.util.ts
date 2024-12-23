@@ -47,6 +47,7 @@ export function isValidId(
 
 export function generateId(
   type: Identifier.ROOM | Identifier.EVENT | Identifier.DEVICE,
+  domain: string,
 ) {
   if (
     type !== Identifier.ROOM &&
@@ -56,5 +57,5 @@ export function generateId(
     throw new Error('Invalid identifier type');
   }
 
-  return `${sigil[type]}${customIdGenerator()}`;
+  return `${sigil[type]}${customIdGenerator()}:${domain}`;
 }

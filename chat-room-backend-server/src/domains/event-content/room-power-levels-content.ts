@@ -19,3 +19,7 @@ export const roomPowerLevelsContentSchema = z.object({
   users: z.record(z.number()).optional(),
   users_default: z.number().optional(),
 });
+
+export type RoomPowerLevelsContent = z.infer<
+  typeof roomPowerLevelsContentSchema
+>;

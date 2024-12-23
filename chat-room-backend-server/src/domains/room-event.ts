@@ -37,3 +37,4 @@ export const roomStrippedEventSchema = roomEventSchema
   );
 
 export type RoomStrippedEvent = z.infer<typeof roomStrippedEventSchema>;
+export type RoomEvent = z.infer<typeof roomEventSchema>;

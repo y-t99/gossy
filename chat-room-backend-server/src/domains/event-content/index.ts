@@ -10,7 +10,9 @@ import { roomNameContentSchema } from './room-name-content';
 import { roomPowerLevelsContentSchema } from './room-power-levels-content';
 import { roomTopicContentSchema } from './room-topic-content';
 import { roomPinnedEventsContentSchema } from './room-pinned-events';
-
+import { historyVisibilityContentSchema } from './history-visibility-content';
+import { guestAccessContentSchema } from './guest-access-content';
+import { roomThirdPartyInviteContentSchema } from './third-party-invite-content';
 export * from './room-message-content';
 export * from './room-avatar-content';
 export * from './room-canonical-alias-content';
@@ -21,7 +23,9 @@ export * from './room-join-rules-content';
 export * from './room-member-content';
 export * from './room-pinned-events';
 export * from './room-power-levels-content';
-
+export * from './history-visibility-content';
+export * from './guest-access-content';
+export * from './third-party-invite-content';
 export const eventContentSchema = z.union([
   roomMessageContentSchema,
   roomMemberContentSchema,
@@ -33,6 +37,9 @@ export const eventContentSchema = z.union([
   roomJoinRulesContentSchema,
   roomPinnedEventsContentSchema,
   roomPowerLevelsContentSchema,
+  historyVisibilityContentSchema,
+  guestAccessContentSchema,
+  roomThirdPartyInviteContentSchema,
 ]);
 
 export type EventContent = z.infer<typeof eventContentSchema>;

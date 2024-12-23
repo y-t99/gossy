@@ -7,3 +7,5 @@ export const noticeMessageContentSchema = z.object({
   formatted_body: z.string().optional(),
   msgtype: z.literal(RoomMessageType.NOTICE),
 });
+
+export type NoticeMessageContent = z.infer<typeof noticeMessageContentSchema>;

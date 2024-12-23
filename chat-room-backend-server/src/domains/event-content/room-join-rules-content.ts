@@ -18,3 +18,5 @@ export const roomJoinRulesContentSchema = z.object({
     ),
   join_rule: z.nativeEnum(RoomJoinRules),
 });
+
+export type RoomJoinRulesContent = z.infer<typeof roomJoinRulesContentSchema>;

@@ -98,6 +98,30 @@ const RoomEventTypeValues = [
    * @see https://spec.matrix.org/v1.12/client-server-api/#mroommessage
    */
   'm.room.message',
+
+  /**
+   * Event type: State event
+   * State key: The zero-length string
+   *
+   * @see https://spec.matrix.org/v1.13/client-server-api/#room-history-visibility
+   */
+  'm.room.history_visibility',
+
+  /**
+   * Event type: State event
+   * State key: The zero-length string
+   *
+   * @see https://spec.matrix.org/v1.13/client-server-api/#guest-access
+   */
+  'm.room.guest_access',
+
+  /**
+   * Event type: State event
+   * State key: The token, of which a signature must be produced in order to join the room.
+   *
+   * @see https://spec.matrix.org/v1.13/client-server-api/#third-party-invites
+   */
+  'm.room.third_party_invite',
 ] as const;
 
 export const RoomEventTypeEnum = z.enum(RoomEventTypeValues);

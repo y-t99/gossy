@@ -12,3 +12,5 @@ export const audioMessageContentSchema = z.object({
   info: audioInfoSchema.optional(),
   url: z.string().url().optional(),
 });
+
+export type AudioMessageContent = z.infer<typeof audioMessageContentSchema>;
