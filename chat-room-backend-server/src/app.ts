@@ -1,6 +1,6 @@
 import Koa from 'koa';
 import { getLogger } from './helpers';
-import { errorHandler, rateLimiterMiddleware } from './middlewares';
+import { authMiddleware, errorHandler, rateLimiterMiddleware } from './middlewares';
 import Router from '@koa/router';
 import koaBody from 'koa-body';
 import { authApis, rootRouter } from './apis';
@@ -12,6 +12,9 @@ app.use(errorHandler);
 
 // rate limiter
 app.use(rateLimiterMiddleware);
+
+// auth middleware
+app.use(authMiddleware);
 
 const logger = getLogger();
 

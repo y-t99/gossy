@@ -3,6 +3,7 @@ import * as Koa from 'koa';
 import { AuthenticationType } from '../domains';
 import { v4 as uuidv4 } from 'uuid';
 import { ErrcodeEnum, ErrorMessageEnum } from '../enums';
+import { getSession } from '../services';
 
 export const authMiddleware = async (ctx: Koa.Context, next: Koa.Next) => {
   const path = ctx.request.path;
@@ -36,5 +37,15 @@ export const authMiddleware = async (ctx: Koa.Context, next: Koa.Next) => {
     };
     return;
   }
+  const session = await getSession(
+    (authHeader as string) || (authParam as string),
+  );
+  if (!session) {
+    // todo
+    ctx.status = StatusCodes.UNAUTHORIZED;
+    ctx.message = ReasonPhrases.UNAUTHORIZED;
+    return;
+  }
+  ctx.context = session;
   return await next();
 };

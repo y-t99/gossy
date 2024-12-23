@@ -112,3 +112,38 @@ export function getSupportedLoginTypes(): LoginFlow[] {
     },
   ];
 }
+
+// todo
+export async function getSession(sessionToken: string) {
+  const jwt = sessionToken.replace('Bearer ', '');
+  const jwtInfo = await decode({ token: jwt });
+  const userId = jwtInfo?.userId;
+  if (userId) {
+    const session = await prisma.session.findUnique({
+      where: {
+        userId: Number(userId),
+      },
+    });
+    if (
+      session?.sessionToken === jwt &&
+      session?.expires &&
+      session.expires > new Date()
+    ) {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: Number(userId),
+        },
+        select: {
+          id: true,
+          uuid: true,
+          name: true,
+          image: true,
+          email: true,
+          phoneNumber: true,
+        },
+      });
+      return user;
+    }
+  }
+  return null;
+}
