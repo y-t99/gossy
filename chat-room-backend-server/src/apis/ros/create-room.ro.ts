@@ -1,14 +1,15 @@
-import { invite3pidSchema, stateEventSchema } from '../../domains';
+import { RoomVersionEnum } from '../../enums';
 import {
   roomCreateContentSchema,
   roomPowerLevelsContentSchema,
-} from '../../domains/event-content';
+  invite3pidSchema,
+  stateEventSchema,
+} from '../../domains';
 import { z } from 'zod';
 
 export const createRoomRoSchema = z.object({
   creation_content: roomCreateContentSchema
-    .pick({
-      'm.federate': true,
+    .omit({
       creator: true,
       room_version: true,
     })
@@ -24,7 +25,7 @@ export const createRoomRoSchema = z.object({
     .enum(['private_chat', 'public_chat', 'trusted_private_chat'])
     .optional(),
   room_alias_name: z.string().optional(),
-  room_version: z.number().optional(),
+  room_version: z.nativeEnum(RoomVersionEnum).optional(),
   topic: z.string().optional(),
   visibility: z.enum(['public', 'private']).optional(),
 });

@@ -2,12 +2,12 @@ import { RoomMembershipStates } from '../../enums';
 import { z } from 'zod';
 
 export const roomMemberContentSchema = z.object({
-  avatar_url: z.string().url().optional(),
-  displayname: z.string().optional(),
-  is_direct: z.boolean().optional(),
-  join_authorised_via_users_server: z.boolean().optional(),
+  avatar_url: z.string().url().nullable().optional(),
+  displayname: z.string().nullable().optional(),
+  is_direct: z.boolean().nullable().optional(),
+  join_authorised_via_users_server: z.string().nullable().optional(),
   membership: z.nativeEnum(RoomMembershipStates),
-  reason: z.string().optional(),
+  reason: z.string().nullable().optional(),
   third_party_invite: z
     .object({
       display_name: z.string(),
@@ -17,6 +17,7 @@ export const roomMemberContentSchema = z.object({
         token: z.string(),
       }),
     })
+    .nullable()
     .optional(),
 });
 

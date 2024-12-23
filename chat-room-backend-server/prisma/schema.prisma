@@ -99,6 +99,8 @@ model Event {
   sender    String    @db.VarChar(255)
   type      EventType
   content   Json
+  stateKey  String?   @map("state_key") @db.VarChar(255)
+  unsigned  Json?
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
 

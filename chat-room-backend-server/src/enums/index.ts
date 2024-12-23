@@ -10,3 +10,4 @@ export * from './role.enum';
 export * from './host-key.enum';
 export * from './thirdpart-id-type.enum';
 export * from './history_visibility.enum';
+export * from './room-version.enum';

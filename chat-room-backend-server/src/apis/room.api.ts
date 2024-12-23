@@ -2,7 +2,13 @@ import Router from '@koa/router';
 import { pipeMiddleware } from '../middlewares';
 import { CreateRoomRo, createRoomRoSchema } from './ros';
 import { generateId } from '../utils';
-import { Identifier, HostKeyEnum, RoomEventTypeEnum } from '../enums';
+import {
+  Identifier,
+  HostKeyEnum,
+  RoomEventTypeEnum,
+  RoomVersionEnum,
+  RoomMembershipStates,
+} from '../enums';
 import {
   GuestAccessContent,
   HistoryVisibilityContent,
@@ -16,6 +22,7 @@ import {
   RoomThirdPartyInviteContent,
   RoomTopicContent,
 } from '../domains';
+import { Context } from 'koa';
 
 export const roomApis = new Router();
 
@@ -27,33 +34,72 @@ roomApis.post(
   pipeMiddleware({
     body: createRoomRoSchema,
   }),
-  async (ctx) => {
+  async (ctx: Context) => {
     const body: CreateRoomRo = ctx.request.body;
+    const context = ctx.context;
     const roomId = generateId(Identifier.ROOM, HostKeyEnum.GOSSY);
     // The m.room.create event itself. Must be the first event in the room.
-    const roomCreateContent: RoomCreateContent = {};
+    const roomCreateContent: RoomCreateContent = {
+      creator: context.uuid,
+      room_version: body.room_version ?? RoomVersionEnum.V11,
+      'm.federate': body.creation_content?.['m.federate'] ?? false,
+      predecessor: body.creation_content?.predecessor,
+      type: body.creation_content?.type,
+    };
     const roomCreateEvent: RoomEvent = {
+      event_id: generateId(Identifier.EVENT, HostKeyEnum.GOSSY),
+      room_id: roomId,
+      origin_server_ts: Date.now(),
+      sender: context.uuid,
       type: RoomEventTypeEnum.Enum['m.room.create'],
       content: roomCreateContent,
     };
     // An m.room.member event for the creator to join the room. This is needed so the remaining events can be sent.
-    const roomMemberContent: RoomMemberContent = {};
+    const roomMemberContent: RoomMemberContent = {
+      avatar_url: context.image,
+      displayname: context.name,
+      is_direct: body.id_direct ?? false,
+      membership: RoomMembershipStates.JOIN,
+      join_authorised_via_users_server: HostKeyEnum.GOSSY,
+      reason: 'An m.room.member event for the creator to join the room.',
+    };
     const roomMemberEvent: RoomEvent = {
+      event_id: generateId(Identifier.EVENT, HostKeyEnum.GOSSY),
+      room_id: roomId,
+      origin_server_ts: Date.now(),
+      sender: context.uuid,
+      // In all cases except for when membership is join, the user ID sending the event does not need to match the user ID in the state_key, unlike other events.
+      state_key: context.uuid,
       type: RoomEventTypeEnum.Enum['m.room.member'],
       content: roomMemberContent,
     };
     // A default m.room.power_levels event, giving the room creator (and not other members) permission to send state events.
-    const roomPowerLevelsContent: RoomPowerLevelsContent = {};
+    const roomPowerLevelsContent: RoomPowerLevelsContent = {
+      ban: 50,
+      events: {},
+      events_default: 0,
+      invite: 0,
+      kick: 50,
+      notifications: {
+        room: 50,
+      },
+      redact: 50,
+      state_default: 50,
+      users: {},
+      users_default: 0,
+      // Overridden by the power_level_content_override parameter.
+      ...body.power_level_content_override,
+    };
     const roomPowerLevelsEvent: RoomEvent = {
       type: RoomEventTypeEnum.Enum['m.room.power_levels'],
       content: roomPowerLevelsContent,
     };
-    // Overridden by the power_level_content_override parameter.
-    if (body.power_level_content_override) {
-    }
     // An m.room.canonical_alias event if room_alias_name is given.
     if (body.room_alias_name) {
-      const roomCanonicalAliasContent: RoomCanonicalAliasContent = {};
+      const roomCanonicalAliasContent: RoomCanonicalAliasContent = {
+        alias: body.room_alias_name,
+        alt_aliases: [],
+      };
       const roomCanonicalAliasEvent: RoomEvent = {
         type: RoomEventTypeEnum.Enum['m.room.canonical_alias'],
         content: roomCanonicalAliasContent,

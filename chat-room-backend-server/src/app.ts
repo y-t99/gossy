@@ -1,6 +1,10 @@
 import Koa from 'koa';
 import { getLogger } from './helpers';
-import { authMiddleware, errorHandler, rateLimiterMiddleware } from './middlewares';
+import {
+  authMiddleware,
+  errorHandler,
+  rateLimiterMiddleware,
+} from './middlewares';
 import Router from '@koa/router';
 import koaBody from 'koa-body';
 import { authApis, rootRouter } from './apis';
