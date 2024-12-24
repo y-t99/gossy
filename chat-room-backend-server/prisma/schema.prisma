@@ -142,6 +142,7 @@ enum RoomJoinRules {
 
 enum EventType {
   ROOM_CREATE             @map("m.room.create")
+  ROOM_CANONICAL_ALIAS    @map("m.room.canonical_alias")
   ROOM_JOIN_RULES         @map("m.room.join_rules")
   ROOM_MEMBER             @map("m.room.member")
   ROOM_POWER_LEVELS       @map("m.room.power_levels")
