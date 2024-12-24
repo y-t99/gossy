@@ -122,7 +122,7 @@
 //   'm.room.third_party_invite',
 // ] as const;
 
-export const RoomEventType = {
+export const RoomStateEventType = {
   ROOM_CREATE: 'ROOM_CREATE',
   ROOM_CANONICAL_ALIAS: 'ROOM_CANONICAL_ALIAS',
   ROOM_JOIN_RULES: 'ROOM_JOIN_RULES',
@@ -132,10 +132,17 @@ export const RoomEventType = {
   ROOM_TOPIC: 'ROOM_TOPIC',
   ROOM_AVATAR: 'ROOM_AVATAR',
   ROOM_PINNED_EVENTS: 'ROOM_PINNED_EVENTS',
-  ROOM_MESSAGE: 'ROOM_MESSAGE',
   ROOM_HISTORY_VISIBILITY: 'ROOM_HISTORY_VISIBILITY',
   ROOM_GUEST_ACCESS: 'ROOM_GUEST_ACCESS',
   ROOM_THIRD_PARTY_INVITE: 'ROOM_THIRD_PARTY_INVITE',
 } as const;
 
+export const RoomEventType = {
+  ...RoomStateEventType,
+  ROOM_MESSAGE: 'ROOM_MESSAGE',
+} as const;
+
 export type RoomEventType = (typeof RoomEventType)[keyof typeof RoomEventType];
+
+export type RoomStateEventType =
+  (typeof RoomStateEventType)[keyof typeof RoomStateEventType];

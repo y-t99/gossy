@@ -207,7 +207,12 @@ function createRoomEffects(
   // Events listed in initial_state, in the order that they are listed.
   if (dto.initial_state) {
     for (const event of dto.initial_state) {
-      // TODO: Implement
+      effects.push({
+        ...getEventBase(),
+        type: event.type,
+        content: event.content,
+        state_key: event.state_key,
+      });
     }
   }
   // Events implied by name and topic (m.room.name and m.room.topic state events).
@@ -234,25 +239,25 @@ function createRoomEffects(
     effects.push(roomTopicEvent);
   }
   // Invite events implied by invite and invite_3pid (m.room.member with membership: invite and m.room.third_party_invite).
-  // if (dto.invite) {
-  //   const roomMemberContent: RoomMemberContent = {
-  //     membership: RoomMembershipStates.INVITE,
-  //   };
-  //   const roomMemberEvent: RoomEvent = {
-  //     event_id: generateId(Identifier.EVENT, HostKeyEnum.GOSSY),
-  //     room_id: roomId,
-  //     origin_server_ts: Date.now(),
-  //     sender: user.uuid,
-  //     type: RoomEventTypeEnum.Enum['m.room.member'],
-  //     content: roomMemberContent,
-  //   };
-  // }
-  // if (dto.invite_3pid) {
-  //   const roomThirdPartyInviteContent: RoomThirdPartyInviteContent = {};
-  //   const roomThirdPartyInviteEvent: RoomEvent = {
-  //     type: RoomEventTypeEnum.Enum['m.room.third_party_invite'],
-  //     content: roomThirdPartyInviteContent,
-  //   };
-  // }
+  if (dto.invite) {
+    for (const uuid of dto.invite) {
+      const roomMemberContent: RoomMemberContent = {
+        avatar_url: user.image,
+        displayname: user.name,
+        membership: RoomMembershipStates.INVITE,
+        is_direct: dto.is_direct ?? false,
+        join_authorised_via_users_server: HostKey.GOSSY,
+        reason: 'Invite events implied by invite.',
+      };
+      const roomMemberEvent: RoomEvent = {
+        ...getEventBase(),
+        state_key: uuid,
+        type: RoomEventType.ROOM_MEMBER,
+        content: roomMemberContent,
+      };
+      effects.push(roomMemberEvent);
+    }
+  }
+  // todo: invite_3pid
   return effects;
 }
