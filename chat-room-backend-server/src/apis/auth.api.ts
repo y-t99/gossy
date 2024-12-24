@@ -28,12 +28,7 @@ import {
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 import { AuthenticationType } from '../domains';
 import { prisma } from '../dbs';
-import {
-  ErrcodeEnum,
-  ErrorMessageEnum,
-  HostKeyEnum,
-  Identifier,
-} from '../enums';
+import { ErrcodeEnum, ErrorMessageEnum, HostKey, Identifier } from '../enums';
 import { isValidId } from '../utils';
 import { HttpException } from '../exceptions';
 
@@ -76,7 +71,7 @@ authApis.get(
     if (query.kind === SignupKind.USER) {
       if (
         !body.username ||
-        isValidId(Identifier.USER, body.username, HostKeyEnum.GOSSY)
+        isValidId(Identifier.USER, body.username, HostKey.GOSSY)
       ) {
         throw new HttpException(
           StatusCodes.BAD_REQUEST,

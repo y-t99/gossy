@@ -1,13 +1,15 @@
-export enum RoomVersionEnum {
-  V1 = '1',
-  V2 = '2',
-  V3 = '3',
-  V4 = '4',
-  V5 = '5',
-  V6 = '6',
-  V7 = '7',
-  V8 = '8',
-  V9 = '9',
-  V10 = '10',
-  V11 = '11',
-}
+export const RoomVersion = {
+  V1: 'V1',
+  V2: 'V2',
+  V3: 'V3',
+  V4: 'V4',
+  V5: 'V5',
+  V6: 'V6',
+  V7: 'V7',
+  V8: 'V8',
+  V9: 'V9',
+  V10: 'V10',
+  V11: 'V11',
+} as const;
+
+export type RoomVersion = (typeof RoomVersion)[keyof typeof RoomVersion];

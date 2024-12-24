@@ -1,3 +1,3 @@
-export const HostKeyEnum = {
-  GOSSY: 'gossy.com',
-};
+export enum HostKey {
+  GOSSY = 'gossy.com',
+}

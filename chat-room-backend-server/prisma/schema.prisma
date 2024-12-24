@@ -74,18 +74,19 @@ model VerificationToken {
 }
 
 model Room {
-  id        Int            @id @default(autoincrement())
-  uuid      String         @unique @db.VarChar(255)
-  name      String?        @db.VarChar(255)
-  alias     String?        @map("alias") @db.VarChar(255)
-  version   Int?
-  type      String?        @db.VarChar(255)
-  avatar    String?        @db.VarChar(255)
-  joinRules RoomJoinRules?
-  topic     String?        @db.VarChar(255)
-  creator   String         @db.VarChar(255)
-  createdAt DateTime       @default(now()) @map("created_at")
-  updatedAt DateTime       @updatedAt @map("updated_at")
+  id         Int            @id @default(autoincrement())
+  uuid       String         @unique @db.VarChar(255)
+  name       String?        @db.VarChar(255)
+  alias      String?        @map("alias") @db.VarChar(255)
+  version    RoomVersion?
+  type       String?        @db.VarChar(255)
+  avatar     String?        @db.VarChar(255)
+  joinRules  RoomJoinRules?
+  topic      String?        @db.VarChar(255)
+  visibility Boolean?       @default(false)
+  creator    String         @db.VarChar(255)
+  createdAt  DateTime       @default(now()) @map("created_at")
+  updatedAt  DateTime       @updatedAt @map("updated_at")
 
   @@index([uuid])
   @@index([creator])
@@ -114,6 +115,20 @@ enum ProviderType {
 enum AccountType {
   OAUTH       @map("oauth")
   CREDENTIALS @map("credentials")
+}
+
+enum RoomVersion {
+  V1  @map("1")
+  V2  @map("2")
+  V3  @map("3")
+  V4  @map("4")
+  V5  @map("5")
+  V6  @map("6")
+  V7  @map("7")
+  V8  @map("8")
+  V9  @map("9")
+  V10 @map("10")
+  V11 @map("11")
 }
 
 enum RoomJoinRules {

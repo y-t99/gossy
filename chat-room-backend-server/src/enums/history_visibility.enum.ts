@@ -1,4 +1,4 @@
-export enum HistoryVisibilityEnum {
+export enum HistoryVisibility {
   INVITED = 'invited',
   JOINED = 'joined',
   SHARED = 'shared',

@@ -6,6 +6,7 @@
     "autoincrement",
     "cuid",
     "datasource",
+    "dtos",
     "errcode",
     "federatable",
     "fkey",
