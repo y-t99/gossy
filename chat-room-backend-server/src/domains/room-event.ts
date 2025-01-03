@@ -36,5 +36,12 @@ export const roomStrippedEventSchema = roomEventSchema
     }),
   );
 
+export const roomEventWithoutRoomIdSchema = roomEventSchema.omit({
+  room_id: true,
+});
+
 export type RoomStrippedEvent = z.infer<typeof roomStrippedEventSchema>;
 export type RoomEvent = z.infer<typeof roomEventSchema>;
+export type RoomEventWithoutRoomId = z.infer<
+  typeof roomEventWithoutRoomIdSchema
+>;

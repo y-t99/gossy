@@ -5,7 +5,9 @@ import { ErrcodeEnum } from '../enums';
 import { getZodErrorMessage } from '../helpers';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 
-export const pipeMiddleware = (schema: PipeSchema): Koa.Middleware => {
+export const pipeMiddleware = (
+  schema: PipeSchema,
+): Koa.Middleware<Koa.DefaultState, Koa.Context> => {
   return async (ctx: Koa.Context, next: Koa.Next) => {
     try {
       if (schema.path) {
