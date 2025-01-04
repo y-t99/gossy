@@ -12,15 +12,18 @@ export const pipeMiddleware = (
     try {
       if (schema.path) {
         const paramsObject = ctx.params;
-        await schema.path.parse(paramsObject);
+        const parsed = await schema.path.parse(paramsObject);
+        ctx.params = parsed;
       }
       if (schema.query) {
         const queryObject = ctx.query;
-        await schema.query.parse(queryObject);
+        const parsed = await schema.query.parse(queryObject);
+        ctx.query = parsed;
       }
       if (schema.body) {
         const bodyObject = ctx.request.body;
-        await schema.body.parse(bodyObject);
+        const parsed = await schema.body.parse(bodyObject);
+        ctx.request.body = parsed;
       }
     } catch (e: unknown) {
       if (e instanceof ZodError) {

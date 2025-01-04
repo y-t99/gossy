@@ -1,7 +1,8 @@
 import Router from '@koa/router';
 import { Context } from 'koa';
 import { pipeMiddleware } from '../middlewares';
-import { syncEventRoSchema } from './ros';
+import { SyncEventRo, syncEventRoSchema } from './ros';
+import { getClientEventsSince } from '../services';
 
 export const eventApis = new Router();
 
@@ -21,5 +22,9 @@ eventApis.get(
   pipeMiddleware({
     query: syncEventRoSchema,
   }),
-  (ctx: Context) => {},
+  async (ctx: Context) => {
+    const body: SyncEventRo = ctx.request.query;
+    const client = ctx.context.uuid;
+    const _ = await getClientEventsSince(client, body.since);
+  },
 );

@@ -5,6 +5,7 @@
   "author": "itou ng",
   "license": "MIT",
   "scripts": {
+    "db:generate": "prisma generate",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "start": "tsc && node dist/app.js"
   },

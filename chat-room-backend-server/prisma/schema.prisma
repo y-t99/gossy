@@ -94,17 +94,21 @@ model Room {
 }
 
 model Event {
-  id        Int       @id @default(autoincrement())
-  uuid      String    @unique @db.VarChar(255)
-  roomId    String    @map("room_id") @db.VarChar(255)
-  sender    String    @db.VarChar(255)
-  type      EventType
-  content   Json
-  stateKey  String?   @map("state_key") @db.VarChar(255)
-  unsigned  Json?
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
+  id             Int       @id @default(autoincrement())
+  uuid           String    @unique @db.VarChar(255)
+  roomId         String    @map("room_id") @db.VarChar(255)
+  sender         String    @db.VarChar(255)
+  type           EventType
+  content        Json
+  stateKey       String?   @map("state_key") @db.VarChar(255)
+  unsigned       Json?
+  originServerTs DateTime  @db.Timestamp(1) @map("origin_server_ts")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
 
+  @@index([roomId])
+  @@index([sender])
+  @@index([originServerTs])
   @@map("events")
 }
 
