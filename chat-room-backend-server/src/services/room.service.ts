@@ -1,6 +1,6 @@
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
-import { generateId } from '../utils';
+import { checkIdFormat, generateId } from '../utils';
 import { prisma } from '../dbs';
 import {
   Identifier,
@@ -27,10 +27,18 @@ import {
   RoomTopicContent,
 } from '../domains';
 import { StatusCodes } from 'http-status-codes';
-import { HttpException } from '../exceptions';
+import {
+  HttpException,
+  ResourceNotFound,
+  RoomAliasConflict,
+  RoomAliasInvalid,
+  RoomAliasNotFound,
+} from '../exceptions';
 import { CreateRoomDto } from '../dtos';
+import util from 'node:util';
 
 export async function createRoom(dto: CreateRoomDto, userId: number) {
+  const originServerTs = new Date().toISOString();
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -81,6 +89,7 @@ export async function createRoom(dto: CreateRoomDto, userId: number) {
         content: effect.content,
         stateKey: effect.state_key,
         unsigned: effect.unsigned,
+        originServerTs,
       })),
     }),
   ]);
@@ -260,4 +269,123 @@ function createRoomEffects(
   }
   // todo: invite_3pid
   return effects;
+}
+
+export async function getRoomByAlias(alias: string) {
+  if (!checkIdFormat(Identifier.ROOM_ALIAS, alias)) {
+    throw new HttpException(
+      StatusCodes.BAD_REQUEST,
+      ErrcodeEnum.M_INVALID_PARAM,
+      RoomAliasInvalid,
+    );
+  }
+  const room = await prisma.room.findUnique({
+    where: {
+      alias,
+    },
+    select: {
+      uuid: true,
+    },
+  });
+  if (!room) {
+    throw new HttpException(
+      StatusCodes.NOT_FOUND,
+      ErrcodeEnum.M_NOT_FOUND,
+      util.format(RoomAliasNotFound, alias),
+    );
+  }
+  return {
+    room_id: room.uuid,
+    servers: [HostKey.GOSSY],
+  };
+}
+
+export async function updateRoomAlias(
+  userUuid: string,
+  uuid: string,
+  alias: string,
+) {
+  if (!checkIdFormat(Identifier.ROOM_ALIAS, alias)) {
+    throw new HttpException(
+      StatusCodes.BAD_REQUEST,
+      ErrcodeEnum.M_INVALID_PARAM,
+      RoomAliasInvalid,
+    );
+  }
+
+  try {
+    await prisma.room.update({
+      where: {
+        uuid: uuid,
+        creator: userUuid,
+      },
+      data: {
+        alias: alias,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        throw new HttpException(
+          StatusCodes.CONFLICT,
+          ErrcodeEnum.M_UNKNOWN,
+          util.format(RoomAliasConflict, alias),
+        );
+      }
+    }
+    throw new HttpException(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      ErrcodeEnum.M_UNKNOWN,
+      ErrorMessageEnum.M_UNKNOWN,
+    );
+  }
+}
+
+export async function removeRoomAlias(userUuid: string, alias: string) {
+  try {
+    await prisma.room.update({
+      where: {
+        alias,
+        creator: userUuid,
+      },
+      data: {
+        alias: null,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2025') {
+        throw new HttpException(
+          StatusCodes.NOT_FOUND,
+          ErrcodeEnum.M_NOT_FOUND,
+          util.format(RoomAliasNotFound, alias),
+        );
+      }
+    }
+    throw new HttpException(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      ErrcodeEnum.M_UNKNOWN,
+      ErrorMessageEnum.M_UNKNOWN,
+    );
+  }
+}
+
+export async function getRoomAliases(userUuid: string, uuid: string) {
+  const room = await prisma.room.findUnique({
+    where: {
+      uuid,
+      creator: userUuid,
+    },
+    select: {
+      alias: true,
+    },
+  });
+  if (!room) {
+    throw new HttpException(
+      StatusCodes.NOT_FOUND,
+      ErrcodeEnum.M_NOT_FOUND,
+      util.format(ResourceNotFound, 'Room'),
+    );
+  }
+  return room.alias ? [room.alias] : [];
 }

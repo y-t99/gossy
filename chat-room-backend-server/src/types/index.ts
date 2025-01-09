@@ -9,7 +9,8 @@ export interface Session {
   image?: string | null;
 }
 declare module 'koa' {
-  interface Context {
+  interface Context<ResponseBodyT = unknown> {
     context: Session;
+    body: ResponseBodyT;
   }
 }

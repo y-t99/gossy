@@ -19,7 +19,7 @@ export async function signinByEmailAndPassword(
 ) {
   const account = await prisma.account.findFirst({
     where: {
-      provider: ProviderType.credentials,
+      provider: ProviderType.CREDENTIALS,
       providerAccountId: email,
     },
   });

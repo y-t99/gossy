@@ -77,7 +77,7 @@ model Room {
   id         Int            @id @default(autoincrement())
   uuid       String         @unique @db.VarChar(255)
   name       String?        @db.VarChar(255)
-  alias      String?        @map("alias") @db.VarChar(255)
+  alias      String?        @unique @map("alias") @db.VarChar(255)
   version    RoomVersion?
   type       String?        @db.VarChar(255)
   avatar     String?        @db.VarChar(255)
