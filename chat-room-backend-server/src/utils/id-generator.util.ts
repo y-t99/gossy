@@ -22,29 +22,6 @@ const sigil = {
 
 const maxIdByteLength = 255;
 
-export function isValidId(
-  type: Identifier,
-  id: string,
-  domain: string,
-): boolean {
-  if (type === Identifier.USER) {
-    const isValid = testUserIdPart(id);
-    if (!isValid) return false;
-  } else if (
-    type !== Identifier.ROOM &&
-    type !== Identifier.ROOM_ALIAS &&
-    type !== Identifier.EVENT
-  ) {
-    return false;
-  }
-
-  if (Buffer.byteLength(`${sigil[type]}${id}:${domain}`) > maxIdByteLength) {
-    return false;
-  }
-
-  return true;
-}
-
 /**
  * @see https://spec.matrix.org/v1.13/appendices/#server-name
  */
@@ -107,6 +84,9 @@ export function checkIdFormat(type: Identifier, id: string) {
   if (!checkServerName(serverName)) return false;
   if (type === Identifier.ROOM_ALIAS) {
     if (localpart[0] !== sigil[type]) return false;
+  } else if (type === Identifier.USER) {
+    if (localpart[0] !== sigil[type]) return false;
+    if (!testUserIdPart(localpart.slice(1))) return false;
   }
   if (Buffer.byteLength(id) > maxIdByteLength) {
     return false;
@@ -115,18 +95,15 @@ export function checkIdFormat(type: Identifier, id: string) {
 }
 
 export function generateId(
-  type: Identifier.ROOM | Identifier.EVENT | Identifier.DEVICE,
+  type:
+    | Identifier.USER
+    | Identifier.ROOM
+    | Identifier.EVENT
+    | Identifier.DEVICE,
   domain: string,
+  localpart?: string,
 ) {
-  if (
-    type !== Identifier.ROOM &&
-    type !== Identifier.EVENT &&
-    type !== Identifier.DEVICE
-  ) {
-    throw new Error('Invalid identifier type');
-  }
-
-  return `${sigil[type]}${customIdGenerator()}:${domain}`;
+  return `${sigil[type]}${localpart ?? customIdGenerator()}:${domain}`;
 }
 
 export function unixTimestamp2TimelinePoint(timestamp: number) {

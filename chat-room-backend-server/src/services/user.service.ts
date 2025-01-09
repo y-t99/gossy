@@ -8,10 +8,11 @@ import {
   ResourceNotFound,
 } from '../exceptions';
 import { StatusCodes } from 'http-status-codes';
-import { ErrcodeEnum } from '../enums';
+import { ErrcodeEnum, HostKey, Identifier } from '../enums';
 import util from 'node:util';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthenticationType, LoginFlow } from '../domains';
+import { generateId } from 'src/utils';
 
 export async function signinByEmailAndPassword(
   email: string,
@@ -59,6 +60,7 @@ export async function signupByEmailAndPassword(
   const user = await prisma.$transaction(async (tx) => {
     const user = await tx.user.create({
       data: {
+        uuid: generateId(Identifier.USER, HostKey.GOSSY),
         name: uuidv4(),
         email,
         password: encryptedPassword,
@@ -70,8 +72,8 @@ export async function signupByEmailAndPassword(
     await tx.account.create({
       data: {
         userId: user.id,
-        type: AccountType.credentials,
-        provider: ProviderType.credentials,
+        type: AccountType.CREDENTIALS,
+        provider: ProviderType.CREDENTIALS,
         providerAccountId: email,
       },
     });

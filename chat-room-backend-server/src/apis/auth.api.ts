@@ -29,7 +29,7 @@ import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 import { AuthenticationType } from '../domains';
 import { prisma } from '../dbs';
 import { ErrcodeEnum, ErrorMessageEnum, HostKey, Identifier } from '../enums';
-import { isValidId } from '../utils';
+import { checkIdFormat, generateId } from '../utils';
 import { HttpException } from '../exceptions';
 
 export const authApis = new Router();
@@ -71,7 +71,10 @@ authApis.get(
     if (query.kind === SignupKind.USER) {
       if (
         !body.username ||
-        isValidId(Identifier.USER, body.username, HostKey.GOSSY)
+        !checkIdFormat(
+          Identifier.USER,
+          generateId(Identifier.USER, HostKey.GOSSY, body.username),
+        )
       ) {
         throw new HttpException(
           StatusCodes.BAD_REQUEST,
