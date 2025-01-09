@@ -1,9 +1,10 @@
 import { EncryptJWT, jwtDecrypt } from 'jose';
 import * as Crypto from 'node:crypto';
+import { HostKey } from '../enums';
 
 const DEFAULT_MAX_AGE = 7 * 24 * 60 * 60; // 7 days
 
-const DEFAULT_SECRET = 'SQUIRREL';
+const DEFAULT_SECRET = HostKey.GOSSY;
 
 const now = () => (Date.now() / 1000) | 0;
 
