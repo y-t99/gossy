@@ -78,7 +78,7 @@ model Room {
   uuid       String         @unique @db.VarChar(255)
   name       String?        @db.VarChar(255)
   alias      String?        @unique @map("alias") @db.VarChar(255)
-  version    RoomVersion?
+  version    RoomVersion    @default(V11)
   type       String?        @db.VarChar(255)
   avatar     String?        @db.VarChar(255)
   joinRules  RoomJoinRules?
@@ -93,6 +93,20 @@ model Room {
   @@map("rooms")
 }
 
+model RoomMember {
+  id         Int            @id @default(autoincrement())
+  roomId     String         @map("room_id") @db.VarChar(255)
+  userId     String         @map("user_id") @db.VarChar(255)
+  membership RoomMembership
+  createdAt  DateTime       @default(now()) @map("created_at")
+  updatedAt  DateTime       @updatedAt @map("updated_at")
+
+  @@index([userId, roomId])
+  @@index([roomId])
+  @@unique([userId, roomId])
+  @@map("room_members")
+}
+
 model Event {
   id             Int       @id @default(autoincrement())
   uuid           String    @unique @db.VarChar(255)
@@ -102,7 +116,7 @@ model Event {
   content        Json
   stateKey       String?   @map("state_key") @db.VarChar(255)
   unsigned       Json?
-  originServerTs DateTime  @db.Timestamp(1) @map("origin_server_ts")
+  originServerTs DateTime  @map("origin_server_ts") @db.Timestamp(1)
   createdAt      DateTime  @default(now()) @map("created_at")
   updatedAt      DateTime  @updatedAt @map("updated_at")
 
@@ -158,4 +172,12 @@ enum EventType {
   ROOM_HISTORY_VISIBILITY @map("m.room.history_visibility")
   ROOM_GUEST_ACCESS       @map("m.room.guest_access")
   ROOM_THIRD_PARTY_INVITE @map("m.room.third_party_invite")
+}
+
+enum RoomMembership {
+  UNRELATED @map("unrelated")
+  KNOCKING  @map("knocking")
+  JOINED    @map("joined")
+  INVITED   @map("invited")
+  BANNED    @map("banned")
 }

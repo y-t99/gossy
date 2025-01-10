@@ -28,7 +28,7 @@ module.exports = {
             caughtErrors: 'all',
             caughtErrorsIgnorePattern: '^_',
             destructuredArrayIgnorePattern: '^_',
-            varsIgnorePattern: '^_',
+            varsIgnorePattern: '^[A-Z_]',
             ignoreRestSiblings: true,
         }],
         "@typescript-eslint/no-unused-vars": [
@@ -39,7 +39,7 @@ module.exports = {
                 "caughtErrors": "all",
                 "caughtErrorsIgnorePattern": "^_",
                 "destructuredArrayIgnorePattern": "^_",
-                "varsIgnorePattern": "^_",
+                "varsIgnorePattern": "^[A-Z_]",
                 "ignoreRestSiblings": true
             }
         ]

@@ -1,4 +1,4 @@
-import { Prisma, User } from '@prisma/client';
+import { Prisma, RoomMembership, User } from '@prisma/client';
 
 import { checkIdFormat, generateId } from '../utils';
 import { prisma } from '../dbs';
@@ -389,3 +389,24 @@ export async function getRoomAliases(userUuid: string, uuid: string) {
   }
   return room.alias ? [room.alias] : [];
 }
+
+export async function getUserJoinedRooms(userUuid: string) {
+  const rooms = await prisma.roomMember.findMany({
+    where: {
+      userId: userUuid,
+      membership: RoomMembership.JOINED,
+    },
+    select: {
+      roomId: true,
+    },
+  });
+
+  return rooms.map((room) => room.roomId);
+}
+
+export async function inviteRoomMember(
+  userId: string,
+  roomId: string,
+  invitedUserId: string,
+  reason?: string,
+) {}

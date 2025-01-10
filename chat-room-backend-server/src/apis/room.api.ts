@@ -5,12 +5,16 @@ import {
   createRoom,
   getRoomAliases,
   getRoomByAlias,
+  getUserJoinedRooms,
+  inviteRoomMember,
   removeRoomAlias,
   updateRoomAlias,
 } from '../services';
 import {
   CreateRoomRo,
   createRoomRoSchema,
+  InviteRoomMemberRo,
+  inviteRoomMemberRoSchema,
   RoomAliasPath,
   roomAliasPathSchema,
   RoomAliasRo,
@@ -20,6 +24,7 @@ import {
 } from './ros';
 import { AliasesVo, AliasInfoVo } from './vos/alias-info.vo';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { JoinedRoomsVo } from './vos';
 
 export const roomApis = new Router();
 
@@ -117,4 +122,54 @@ roomApis.get(
       aliases,
     };
   },
+);
+
+/**
+ * @see https://spec.matrix.org/v1.13/client-server-api/#get_matrixclientv3joined_rooms
+ */
+roomApis.get(
+  '/_matrix/client/v3/joined_rooms',
+  pipeMiddleware({}),
+  async (ctx: Context<JoinedRoomsVo>) => {
+    const context = ctx.context;
+
+    const rooms = await getUserJoinedRooms(context.uuid);
+
+    ctx.status = StatusCodes.OK;
+    ctx.message = ReasonPhrases.OK;
+    ctx.body = {
+      joined_rooms: rooms,
+    };
+  },
+);
+
+/**
+ * @see https://spec.matrix.org/v1.13/client-server-api/#post_matrixclientv3roomsroomidinvite
+ */
+roomApis.post(
+  '/_matrix/client/v3/rooms/{roomId}/invite',
+  pipeMiddleware({
+    path: roomRoSchema,
+    body: inviteRoomMemberRoSchema,
+  }),
+  async (ctx: Context) => {
+    const { room_id }: RoomRo = ctx.params;
+    const { user_id, reason }: InviteRoomMemberRo = ctx.request.body;
+    const context = ctx.context;
+
+    await inviteRoomMember(context.uuid, room_id, user_id, reason);
+
+    ctx.status = StatusCodes.OK;
+    ctx.message = ReasonPhrases.OK;
+    ctx.body = {};
+  },
+);
+
+/**
+ * @see https://spec.matrix.org/v1.13/client-server-api/#post_matrixclientv3joinroomidoralias
+ */
+roomApis.post(
+  '/_matrix/client/v3/join/:roomIdOrAlias',
+  pipeMiddleware({}),
+  async (ctx: Context) => {},
 );
