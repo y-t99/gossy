@@ -175,9 +175,14 @@ enum EventType {
 }
 
 enum RoomMembership {
+  // Unrelated (the user cannot send or receive events in the room)
   UNRELATED @map("unrelated")
+  // Knocking (the user has requested to participate in the room, but has not yet been allowed to)
   KNOCKING  @map("knocking")
+  // Invited (the user has been invited to participate in the room, but is not yet participating)
   JOINED    @map("joined")
+  // Joined (the user can send and receive events in the room)
   INVITED   @map("invited")
+  // Banned (the user is not allowed to join the room)
   BANNED    @map("banned")
 }

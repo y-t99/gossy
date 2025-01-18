@@ -29,6 +29,8 @@ import {
 import { StatusCodes } from 'http-status-codes';
 import {
   HttpException,
+  InviteeBanned,
+  InviterNotRoomMember,
   ResourceNotFound,
   RoomAliasConflict,
   RoomAliasInvalid,
@@ -408,5 +410,53 @@ export async function inviteRoomMember(
   userId: string,
   roomId: string,
   invitedUserId: string,
-  reason?: string,
-) {}
+  _reason?: string,
+) {
+  const inviterRoomMemberShip = await prisma.roomMember.findUnique({
+    where: {
+      userId_roomId: {
+        userId: userId,
+        roomId: roomId,
+      },
+    },
+  });
+  if (!inviterRoomMemberShip) {
+    throw new HttpException(
+      StatusCodes.FORBIDDEN,
+      ErrcodeEnum.M_FORBIDDEN,
+      util.format(InviterNotRoomMember, userId),
+    );
+  }
+  // todo: check invitee power level
+  const roomMemberShip = await prisma.roomMember.findUnique({
+    where: {
+      userId_roomId: {
+        userId: invitedUserId,
+        roomId,
+      },
+    },
+    select: {
+      membership: true,
+    },
+  });
+  if (
+    roomMemberShip?.membership === RoomMembership.JOINED ||
+    roomMemberShip?.membership === RoomMembership.INVITED
+  ) {
+    return;
+  } else if (roomMemberShip?.membership === RoomMembership.BANNED) {
+    throw new HttpException(
+      StatusCodes.FORBIDDEN,
+      ErrcodeEnum.M_FORBIDDEN,
+      util.format(InviteeBanned, invitedUserId),
+    );
+  } else {
+    await prisma.roomMember.create({
+      data: {
+        roomId,
+        userId: invitedUserId,
+        membership: RoomMembership.INVITED,
+      },
+    });
+  }
+}
